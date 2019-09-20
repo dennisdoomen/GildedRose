@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using FluentAssertions;
+using Xunit;
 
-using GuildedRose.Tests;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace GildedRose.Specs
+namespace GildedRose.Core.Specs
 {
-    [TestClass]
     public class GildedRoseSpecs
     {
         private const int MaxBackstageSellin = 30;
@@ -19,14 +14,13 @@ namespace GildedRose.Specs
         private List<Item> items;
         private Random rand = new Random(3456789);
 
-        [TestInitialize]
-        public void Setup()
+        public GildedRoseSpecs()
         {
             gildedRose = new GildedRose();
             items = gildedRose.MakeItems();
         }
 
-        [TestMethod]
+        [Fact]
         public void After_one_day()
         {
             RepeatUpdateQuality(1);
@@ -49,7 +43,7 @@ namespace GildedRose.Specs
             sellIns.Should().BeEquivalentTo(new[] { 9, 1, 4, 0, 14, 2 });
         }
 
-        [TestMethod]
+        [Fact]
         public void After_three_days()
         {
             RepeatUpdateQuality(3);
@@ -72,7 +66,7 @@ namespace GildedRose.Specs
             sellIns.Should().BeEquivalentTo(new[] { 7, -1, 2, 0, 12, 0 });
         }
 
-        [TestMethod]
+        [Fact]
         public void After_a_shitload_of_days()
         {
             RepeatUpdateQuality(500);
@@ -95,7 +89,7 @@ namespace GildedRose.Specs
             sellIns.Should().BeEquivalentTo(new int[] { -490, -498, -495, 0, -485, -497 });
         }
 
-        [TestMethod]
+        [Fact]
         public void Backstage_pass_golden_copy()
         {
             items = ABunchOfBackstagePasses();
