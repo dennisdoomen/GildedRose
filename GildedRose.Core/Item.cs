@@ -1,25 +1,109 @@
 using System;
+using System.Collections.Generic;
 
 namespace GildedRose
 {
-    public class Item
+    public abstract class Item
     {
-        private String name;
+        private readonly string name;
+        private Days shelfLife;
+        private Quality quality;
 
-        public Item(string name, int sellIn, int quality)
+        protected Item(string name, Days shelfLife, Quality quality)
         {
             this.name = name;
-            this.Quality = quality;
-            this.SellIn = sellIn;
+            this.quality = quality;
+            this.shelfLife = shelfLife;
         }
 
-        public int SellIn { get; set; }
+        public Days ShelfLife => shelfLife;
 
-        public int Quality { get; set; }
+        public Quality Quality => quality;
 
-        public string Name
+        public bool IsExpired
         {
-            get { return name; }
+            get { return shelfLife < new Days(0); }
+        }
+
+        public Days DaysOverdue
+        {
+            get { return (shelfLife > new Days(0)) ? new Days(0) : -shelfLife; }
+        }
+
+        public static IComparer<Item> ByQualityComparer
+        {
+            get { return new QualityComparer(); }
+        }
+
+        public abstract void OnDayHasPassed();
+
+        public override string ToString()
+        {
+            return string.Format("{0} (quality {1}, sell in {2} days)", name, quality, shelfLife);
+        }
+
+        protected bool Equals(Item other)
+        {
+            return shelfLife.Equals(other.shelfLife) && string.Equals(name, other.name) && quality.Equals(other.quality);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            return Equals((Item)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = shelfLife.GetHashCode();
+                hashCode = (hashCode * 397) ^ name.GetHashCode();
+                hashCode = (hashCode * 397) ^ quality.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        protected void IncreaseQuality()
+        {
+            quality = quality.Increase();
+        }
+
+        protected void DecreaseQuality()
+        {
+            quality = quality.Decrease();
+        }
+
+        protected void Devaluate()
+        {
+            quality = new Quality(0);
+        }
+
+        protected void ReduceShelfLife()
+        {
+            shelfLife = shelfLife.ReduceByOneDay();
+        }
+
+        protected bool IsDueWithin(Days days)
+        {
+            return shelfLife < days;
+        }
+
+        private class QualityComparer : IComparer<Item>
+        {
+            public int Compare(Item x, Item y)
+            {
+                return x.quality.CompareTo(y.quality);
+            }
         }
     }
 }
