@@ -41,7 +41,7 @@ namespace GildedRose.Specs
         [InlineData(15, 80)]
         [InlineData(20, 80)]
         [InlineData(21, 80)]
-        public void Sulfuras_never_looses_its_quality(int daysPassed, uint expectedQuality)
+        public void Sulfuras_never_loses_its_quality(int daysPassed, uint expectedQuality)
         {
             // Arrange
             int shelfLife = 20;
