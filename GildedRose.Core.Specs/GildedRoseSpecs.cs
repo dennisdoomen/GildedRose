@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
 
 namespace GildedRose.Specs
@@ -29,8 +28,14 @@ namespace GildedRose.Specs
             inventory.HandleDayChanges(daysPassed);
 
             // Assert
-            inventory.Single().ShelfLife.Should().Be(new Days(nrDaysUntilConcert - daysPassed));
-            inventory.Single().Quality.Should().Be(new Quality(expectedQuality));
+            inventory.Should().BeEquivalentTo(new[]
+            {
+                new
+                {
+                    ShelfLife = new Days(nrDaysUntilConcert - daysPassed),
+                    Quality = new Quality(expectedQuality)
+                }
+            });
         }
 
         [Theory]
@@ -55,8 +60,14 @@ namespace GildedRose.Specs
             inventory.HandleDayChanges(daysPassed);
 
             // Assert
-            inventory.Single().ShelfLife.Should().Be(new Days(shelfLife));
-            inventory.Single().Quality.Should().Be(new Quality(expectedQuality));
+            inventory.Should().BeEquivalentTo(new[]
+            {
+                new
+                {
+                    ShelfLife = new Days(shelfLife),
+                    Quality = new Quality(expectedQuality)
+                }
+            });
         }
     }
 }
