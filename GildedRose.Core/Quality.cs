@@ -2,13 +2,13 @@
 
 namespace GildedRose
 {
-    public struct Quality : IComparable
+    public readonly struct Quality : IComparable
     {
-        private readonly uint value;
+        private readonly uint _value;
 
         public Quality(uint value)
         {
-            this.value = value;
+            _value = value;
         }
 
         public static bool operator ==(Quality left, Quality right)
@@ -21,14 +21,11 @@ namespace GildedRose
             return !left.Equals(right);
         }
 
-        public bool HasMaximumQuality
-        {
-            get { return value >= 50; }
-        }
+        public bool HasMaximumQuality => _value >= 50;
 
         public bool Equals(Quality other)
         {
-            return value == other.value;
+            return _value == other._value;
         }
 
         public override bool Equals(object obj)
@@ -43,24 +40,24 @@ namespace GildedRose
 
         public override int GetHashCode()
         {
-            return (int)value;
+            return (int)_value;
         }
 
         public int CompareTo(object obj)
         {
-            return value.CompareTo(((Quality)obj).value);
+            return _value.CompareTo(((Quality)obj)._value);
         }
 
         public override string ToString()
         {
-            return value.ToString();
+            return _value.ToString();
         }
 
         public Quality Decrease()
         {
-            if (value > 0)
+            if (_value > 0)
             {
-                return new Quality(value - 1);
+                return new Quality(_value - 1);
             }
 
             return this;
@@ -70,7 +67,7 @@ namespace GildedRose
         {
             if (!HasMaximumQuality)
             {
-                return new Quality(value + 1);
+                return new Quality(_value + 1);
             }
 
             return this;

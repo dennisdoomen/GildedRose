@@ -3,48 +3,39 @@ using System.Collections.Generic;
 
 namespace GildedRose
 {
-    public abstract class Item
+    public abstract class Item : IItem
     {
-        private readonly string name;
-        private Days shelfLife;
-        private Quality quality;
+        private readonly string _name;
+        private Days _shelfLife;
+        private Quality _quality;
 
         protected Item(string name, Days shelfLife, Quality quality)
         {
-            this.name = name;
-            this.quality = quality;
-            this.shelfLife = shelfLife;
+            _name = name;
+            _quality = quality;
+            _shelfLife = shelfLife;
         }
 
-        public Days ShelfLife => shelfLife;
+        public Days ShelfLife => _shelfLife;
 
-        public Quality Quality => quality;
+        public Quality Quality => _quality;
 
-        public bool IsExpired
-        {
-            get { return shelfLife < new Days(0); }
-        }
+        public bool IsExpired => _shelfLife < new Days(0);
 
-        public Days DaysOverdue
-        {
-            get { return (shelfLife > new Days(0)) ? new Days(0) : -shelfLife; }
-        }
+        public Days DaysOverdue => (_shelfLife > new Days(0)) ? new Days(0) : -_shelfLife;
 
-        public static IComparer<Item> ByQualityComparer
-        {
-            get { return new QualityComparer(); }
-        }
+        public static IComparer<IItem> ByQualityComparer => new QualityComparer();
 
         public abstract void OnDayHasPassed();
 
         public override string ToString()
         {
-            return string.Format("{0} (quality {1}, sell in {2} days)", name, quality, shelfLife);
+            return $"{_name} (quality {_quality}, sell in {_shelfLife} days)";
         }
 
         protected bool Equals(Item other)
         {
-            return shelfLife.Equals(other.shelfLife) && string.Equals(name, other.name) && quality.Equals(other.quality);
+            return _shelfLife.Equals(other._shelfLife) && string.Equals(_name, other._name) && _quality.Equals(other._quality);
         }
 
         public override bool Equals(object obj)
@@ -66,43 +57,43 @@ namespace GildedRose
         {
             unchecked
             {
-                int hashCode = shelfLife.GetHashCode();
-                hashCode = (hashCode * 397) ^ name.GetHashCode();
-                hashCode = (hashCode * 397) ^ quality.GetHashCode();
+                int hashCode = _shelfLife.GetHashCode();
+                hashCode = (hashCode * 397) ^ _name.GetHashCode();
+                hashCode = (hashCode * 397) ^ _quality.GetHashCode();
                 return hashCode;
             }
         }
 
         protected void IncreaseQuality()
         {
-            quality = quality.Increase();
+            _quality = _quality.Increase();
         }
 
         protected void DecreaseQuality()
         {
-            quality = quality.Decrease();
+            _quality = _quality.Decrease();
         }
 
         protected void Devaluate()
         {
-            quality = new Quality(0);
+            _quality = new Quality(0);
         }
 
         protected void ReduceShelfLife()
         {
-            shelfLife = shelfLife.ReduceByOneDay();
+            _shelfLife = _shelfLife.ReduceByOneDay();
         }
 
         protected bool IsDueWithin(Days days)
         {
-            return shelfLife < days;
+            return _shelfLife < days;
         }
 
-        private class QualityComparer : IComparer<Item>
+        private class QualityComparer : IComparer<IItem>
         {
-            public int Compare(Item x, Item y)
+            public int Compare(IItem x, IItem y)
             {
-                return x.quality.CompareTo(y.quality);
+                return x.Quality.CompareTo(y.Quality);
             }
         }
     }

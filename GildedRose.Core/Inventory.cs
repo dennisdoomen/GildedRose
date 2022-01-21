@@ -4,23 +4,23 @@ using System.Linq;
 
 namespace GildedRose
 {
-    public class Inventory : IEnumerable<Item>
+    public class Inventory : IEnumerable<IItem>
     {
-        private readonly HashSet<Item> items = new HashSet<Item>();
+        private readonly HashSet<IItem> _items = new();
 
-        public Item HighestValued
+        public IItem HighestValued
         {
-            get { return items.OrderBy(i => i, Item.ByQualityComparer).Last(); }
+            get { return _items.OrderBy(i => i, Item.ByQualityComparer).Last(); }
         }
 
-        public IEnumerable<Item> ExpiredItems
+        public IEnumerable<IItem> ExpiredItems
         {
-            get { return items.Where(i => i.IsExpired).ToArray(); }
+            get { return _items.Where(i => i.IsExpired).ToArray(); }
         }
 
-        public IEnumerator<Item> GetEnumerator()
+        public IEnumerator<IItem> GetEnumerator()
         {
-            return items.GetEnumerator();
+            return _items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -28,16 +28,16 @@ namespace GildedRose
             return GetEnumerator();
         }
 
-        public void Add(Item item)
+        public void Add(IItem item)
         {
-            items.Add(item);
+            _items.Add(item);
         }
 
         public void HandleDayChanges(int nrOfDays)
         {
             for (int i = 0; i < nrOfDays; i++)
             {
-                foreach (var item in items)
+                foreach (var item in _items)
                 {
                     item.OnDayHasPassed();
                 }

@@ -1,6 +1,6 @@
 namespace GildedRose
 {
-    public class BackstagePass : Item
+    public class BackstagePass : Item, IItem
     {
         public BackstagePass(Days shelfLife, Quality quality)
             : base("Backstage passes to a TAFKAL80ETC concert", shelfLife, quality)

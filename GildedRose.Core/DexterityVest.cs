@@ -1,6 +1,6 @@
 namespace GildedRose
 {
-    public class DexterityVest : Item
+    public class DexterityVest : Item, IItem
     {
         public DexterityVest(Days shelfLife, Quality quality)
             : base("+5 Dexterity Vest", shelfLife, quality)

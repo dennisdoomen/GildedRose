@@ -1,6 +1,6 @@
 namespace GildedRose
 {
-    public class Sulfuras : Item
+    public class Sulfuras : Item, IItem
     {
         public Sulfuras(Days shelfLife)
             : base("Sulfuras, Hand of Ragnaros", shelfLife, new Quality(80))

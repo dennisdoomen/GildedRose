@@ -2,7 +2,7 @@ using System;
 
 namespace GildedRose
 {
-    public class Program
+    public static class Program
     {
         public static void Main(String[] args)
         {
