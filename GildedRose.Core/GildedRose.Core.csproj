@@ -6,6 +6,7 @@
         <AssemblyName>GildedRose</AssemblyName>
         <RootNamespace>GildedRose</RootNamespace>
         <Nullable>disable</Nullable>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
 </Project>
