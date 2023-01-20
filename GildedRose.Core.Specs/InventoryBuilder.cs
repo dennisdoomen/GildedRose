@@ -1,31 +1,27 @@
 ﻿using System.Linq;
 
-namespace GildedRose.Specs
+namespace GildedRose.Specs;
+
+internal class InventoryBuilder
 {
-    internal class InventoryBuilder
+    private Inventory inventory = new();
+
+    public Inventory Build()
     {
-        private Inventory inventory = new();
+        if (!inventory.Any()) inventory = Program.CreateInventory();
 
-        public Inventory Build()
-        {
-            if (!inventory.Any())
-            {
-                inventory = Program.CreateInventory();
-            }
+        return inventory;
+    }
 
-            return inventory;
-        }
+    public InventoryBuilder With(BackstagePassBuilder builder)
+    {
+        inventory.Add(builder.Build());
+        return this;
+    }
 
-        public InventoryBuilder With(BackstagePassBuilder builder)
-        {
-            inventory.Add(builder.Build());
-            return this;
-        }
-
-        public InventoryBuilder With(SulfurasBuilder builder)
-        {
-            inventory.Add(builder.Build());
-            return this;
-        }
+    public InventoryBuilder With(SulfurasBuilder builder)
+    {
+        inventory.Add(builder.Build());
+        return this;
     }
 }

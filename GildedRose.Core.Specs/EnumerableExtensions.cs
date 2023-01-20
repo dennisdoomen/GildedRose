@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GildedRose.Specs
+namespace GildedRose.Specs;
+
+internal static class EnumerableExtensions
 {
-    internal static class EnumerableExtensions
+    public static void ForEach<T>(this IEnumerable<T> source, Action action)
     {
-        public static void ForEach<T>(this IEnumerable<T> source, Action action)
-        {
-            foreach (var value in source)
-            {
-                action();
-            }
-        }
+        foreach (T value in source) action();
     }
 }

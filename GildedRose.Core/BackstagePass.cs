@@ -1,33 +1,26 @@
-namespace GildedRose
+namespace GildedRose;
+
+public class BackstagePass : Item, IItem
 {
-    public class BackstagePass : Item, IItem
+    public BackstagePass(Days shelfLife, Quality quality)
+        : base("Backstage passes to a TAFKAL80ETC concert", shelfLife, quality)
     {
-        public BackstagePass(Days shelfLife, Quality quality)
-            : base("Backstage passes to a TAFKAL80ETC concert", shelfLife, quality)
+    }
+
+    public override void OnDayHasPassed()
+    {
+        ReduceShelfLife();
+        if (IsExpired)
         {
+            Devaluate();
         }
-
-        public override void OnDayHasPassed()
+        else
         {
-            ReduceShelfLife();
-            if (IsExpired)
-            {
-                Devaluate();
-            }
-            else
-            {
-                IncreaseQuality();
+            IncreaseQuality();
 
-                if (IsDueWithin(new Days(10)))
-                {
-                    IncreaseQuality();
-                }
+            if (IsDueWithin(new Days(10))) IncreaseQuality();
 
-                if (IsDueWithin(new Days(5)))
-                {
-                    IncreaseQuality();
-                }
-            }
+            if (IsDueWithin(new Days(5))) IncreaseQuality();
         }
     }
 }
