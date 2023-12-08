@@ -35,9 +35,15 @@ public abstract class Item : IItem
 
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
 
-        if (ReferenceEquals(this, obj)) return true;
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
 
         return Equals((Item)obj);
     }
@@ -47,8 +53,8 @@ public abstract class Item : IItem
         unchecked
         {
             int hashCode = _shelfLife.GetHashCode();
-            hashCode = (hashCode * 397) ^ _name.GetHashCode();
-            hashCode = (hashCode * 397) ^ _quality.GetHashCode();
+            hashCode = hashCode * 397 ^ _name.GetHashCode();
+            hashCode = hashCode * 397 ^ _quality.GetHashCode();
             return hashCode;
         }
     }

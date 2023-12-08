@@ -25,7 +25,10 @@ public readonly struct Days : IComparable
 
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
 
         return obj is Days && Equals((Days)obj);
     }

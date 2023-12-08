@@ -10,7 +10,11 @@ public class ElixirOfTheMongoose : Item, IItem
     public override void OnDayHasPassed()
     {
         ReduceShelfLife();
-        if (IsExpired) DecreaseQuality();
+
+        if (IsExpired)
+        {
+            DecreaseQuality();
+        }
 
         DecreaseQuality();
     }

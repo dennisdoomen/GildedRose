@@ -8,7 +8,10 @@ internal class InventoryBuilder
 
     public Inventory Build()
     {
-        if (!inventory.Any()) inventory = Program.CreateInventory();
+        if (!inventory.Any())
+        {
+            inventory = Program.CreateInventory();
+        }
 
         return inventory;
     }

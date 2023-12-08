@@ -21,7 +21,10 @@ public readonly struct Quality : IComparable
 
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
 
         return obj is Quality && Equals((Quality)obj);
     }
@@ -34,14 +37,20 @@ public readonly struct Quality : IComparable
 
     public Quality Decrease()
     {
-        if (_value > 0) return new Quality(_value - 1);
+        if (_value > 0)
+        {
+            return new Quality(_value - 1);
+        }
 
         return this;
     }
 
     public Quality Increase()
     {
-        if (!HasMaximumQuality) return new Quality(_value + 1);
+        if (!HasMaximumQuality)
+        {
+            return new Quality(_value + 1);
+        }
 
         return this;
     }

@@ -10,8 +10,11 @@ public class AgedBrie : Item, IItem
     public override void OnDayHasPassed()
     {
         ReduceShelfLife();
-        if (IsExpired) IncreaseQuality();
-
         IncreaseQuality();
+
+        if (IsExpired)
+        {
+            IncreaseQuality();
+        }
     }
 }

@@ -21,7 +21,12 @@ public class Inventory : IEnumerable<IItem>
     public void HandleDayChanges(int nrOfDays)
     {
         for (int i = 0; i < nrOfDays; i++)
+        {
             foreach (IItem item in _items)
+
+            {
                 item.OnDayHasPassed();
+            }
+        }
     }
 }

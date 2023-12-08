@@ -10,6 +10,8 @@ public class BackstagePass : Item, IItem
     public override void OnDayHasPassed()
     {
         ReduceShelfLife();
+
+
         if (IsExpired)
         {
             Devaluate();
@@ -18,9 +20,15 @@ public class BackstagePass : Item, IItem
         {
             IncreaseQuality();
 
-            if (IsDueWithin(new Days(10))) IncreaseQuality();
+            if (IsDueWithin(new Days(10)))
+            {
+                IncreaseQuality();
+            }
 
-            if (IsDueWithin(new Days(5))) IncreaseQuality();
+            if (IsDueWithin(new Days(5)))
+            {
+                IncreaseQuality();
+            }
         }
     }
 }
