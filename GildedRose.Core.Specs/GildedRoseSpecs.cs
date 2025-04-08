@@ -20,18 +20,21 @@ public class GildedRoseSpecs
 
         Inventory inventory = new InventoryBuilder()
             .With(new BackstagePassBuilder()
-                .WhichExpires(new Days(nrDaysUntilConcert))
-                .WithQuality(new Quality(10)))
+                .WhichExpiresInDays(nrDaysUntilConcert)
+                .WithQuality(QualityLevel.From(10)))
             .Build();
 
         // Act
         inventory.HandleDayChanges(daysPassed);
 
         // Assert
-        inventory.Should().BeEquivalentTo(new[]
-        {
-            new {ShelfLife = new Days(nrDaysUntilConcert - daysPassed), Quality = new Quality(expectedQuality)}
-        });
+        inventory.Should().BeEquivalentTo(
+        [
+            new
+            {
+                Quality = QualityLevel.From(expectedQuality)
+            }
+        ]);
     }
 
     [Theory]
@@ -49,13 +52,18 @@ public class GildedRoseSpecs
 
         Inventory inventory = new InventoryBuilder()
             .With(new SulfurasBuilder()
-                .WithShelfLife(new Days(shelfLife)))
+                .WithShelfLifeInDays(shelfLife))
             .Build();
 
         // Act
         inventory.HandleDayChanges(daysPassed);
 
         // Assert
-        inventory.Should().BeEquivalentTo(new[] {new {ShelfLife = new Days(shelfLife), Quality = new Quality(expectedQuality)}});
+        inventory.Should().BeEquivalentTo([
+            new
+            {
+                Quality = QualityLevel.From(expectedQuality)
+            }
+        ]);
     }
 }

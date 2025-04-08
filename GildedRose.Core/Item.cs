@@ -1,37 +1,43 @@
+using System;
 using System.Collections.Generic;
 
 namespace GildedRose;
 
-public abstract class Item : IItem
+public class Item
 {
-    private readonly string _name;
-    private Quality _quality;
-    private Days _shelfLife;
+    private readonly string name;
+    private QualityLevel quality;
+    private readonly IValuationStrategy strategy;
+    private DaySpan remainingTimeToSell;
 
-    protected Item(string name, Days shelfLife, Quality quality)
+    public Item(string name, IValuationStrategy strategy, DaySpan remainingTimeToSell, QualityLevel quality)
     {
-        _name = name;
-        _quality = quality;
-        _shelfLife = shelfLife;
+        this.name = name;
+        this.quality = quality;
+        this.strategy = strategy;
+        this.remainingTimeToSell = remainingTimeToSell;
     }
 
-    public Days ShelfLife => _shelfLife;
+    public static IComparer<Item> ByQualityComparer => new QualityComparer();
 
-    public static IComparer<IItem> ByQualityComparer => new QualityComparer();
+    public bool IsOverdue => remainingTimeToSell.IsOverdue;
 
-    public Quality Quality => _quality;
+    public QualityLevel Quality => quality;
 
-    public bool IsExpired => _shelfLife < new Days(0);
+    public int DaysOverdue => remainingTimeToSell.DaysOverdue;
 
-    public Days DaysOverdue => _shelfLife > new Days(0) ? new Days(0) : -_shelfLife;
+    public void OnDayHasPassed()
+    {
+        (remainingTimeToSell, quality) = strategy.ValuateAfterOneDay(remainingTimeToSell, quality);
+    }
 
-    public abstract void OnDayHasPassed();
+    public override string ToString() => $"{name} (quality {quality}, sell in {remainingTimeToSell} days)";
 
-    public override string ToString() => $"{_name} (quality {_quality}, sell in {_shelfLife} days)";
+    #region Equality Members
 
-    protected bool Equals(Item other) =>
-        _shelfLife.Equals(other._shelfLife) && string.Equals(_name, other._name) &&
-        _quality.Equals(other._quality);
+    private bool Equals(Item other) =>
+        remainingTimeToSell.Equals(other.remainingTimeToSell) && string.Equals(name, other.name, StringComparison.Ordinal) &&
+        quality.Equals(other.quality);
 
     public override bool Equals(object obj)
     {
@@ -52,25 +58,17 @@ public abstract class Item : IItem
     {
         unchecked
         {
-            int hashCode = _shelfLife.GetHashCode();
-            hashCode = hashCode * 397 ^ _name.GetHashCode();
-            hashCode = hashCode * 397 ^ _quality.GetHashCode();
+            int hashCode = remainingTimeToSell.GetHashCode();
+            hashCode = hashCode * 397 ^ name.GetHashCode(StringComparison.Ordinal);
+            hashCode = hashCode * 397 ^ quality.GetHashCode();
             return hashCode;
         }
     }
 
-    protected void IncreaseQuality() => _quality = _quality.Increase();
+    #endregion
 
-    protected void DecreaseQuality() => _quality = _quality.Decrease();
-
-    protected void Devaluate() => _quality = new Quality(0);
-
-    protected void ReduceShelfLife() => _shelfLife = _shelfLife.ReduceByOneDay();
-
-    protected bool IsDueWithin(Days days) => _shelfLife < days;
-
-    private class QualityComparer : IComparer<IItem>
+    private class QualityComparer : IComparer<Item>
     {
-        public int Compare(IItem x, IItem y) => x.Quality.CompareTo(y.Quality);
+        public int Compare(Item x, Item y) => x.quality.CompareTo(y.quality);
     }
 }
